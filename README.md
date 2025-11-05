@@ -20,6 +20,7 @@
 |------|------|
 | **Revaldo Ilham** | 
 | **Louis Mahardika** |  
+| **Rifky Veriyandika** |  
 
 
 ---
