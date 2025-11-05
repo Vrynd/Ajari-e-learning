@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'courses_screen.dart';
 import 'profile_screen.dart';
+import 'chat_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -28,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
       case 1:
         return const CoursesScreen();
       case 2:
-        return const Center(child: Text('Chat')); // Placeholder
+        return ChatScreen();
       case 3:
         return const ProfileScreen();
       default:

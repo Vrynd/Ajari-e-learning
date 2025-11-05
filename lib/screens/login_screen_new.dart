@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'create_account_screen.dart';
 import 'home_screen.dart';
+import 'reset_password_screen.dart';
 import '../services/local_db.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -244,7 +245,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     TextButton(
                       onPressed: () {
-                        // Handle reset password
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (c) => const ResetPasswordScreen(),
+                          ),
+                        );
                       },
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.zero,
