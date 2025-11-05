@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CourseDetailScreen extends StatelessWidget {
+class CourseDetailScreen extends StatefulWidget {
   final String title;
   final String category;
   final String rating;
@@ -17,6 +17,35 @@ class CourseDetailScreen extends StatelessWidget {
     required this.joinedCount,
     required this.duration,
   });
+
+  @override
+  State<CourseDetailScreen> createState() => _CourseDetailScreenState();
+}
+
+class _CourseDetailScreenState extends State<CourseDetailScreen> {
+  int _selectedIndex = 0; // 0: content, 1: reviews, 2: achievement
+
+  // Dummy reviews
+  final List<Map<String, String>> _reviews = [
+    {
+      'username': 'Kevin',
+      'avatar': 'https://randomuser.me/api/portraits/men/11.jpg',
+      'rating': '5',
+      'content': 'Materi sangat jelas dan mudah dipahami.',
+    },
+    {
+      'username': 'Sarah',
+      'avatar': 'https://randomuser.me/api/portraits/women/12.jpg',
+      'rating': '4',
+      'content': 'Praktiknya membantu, tapi butuh lebih banyak contoh.',
+    },
+  ];
+
+  // Dummy achievements
+  final List<Map<String, String>> _achievements = [
+    {'title': 'Completed 5 Lessons', 'icon': 'school'},
+    {'title': 'Top Performer', 'icon': 'star'},
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +83,7 @@ class CourseDetailScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
-                    category,
+                    widget.category,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 12,
@@ -64,7 +93,7 @@ class CourseDetailScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  title,
+                  widget.title,
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
@@ -78,7 +107,7 @@ class CourseDetailScreen extends StatelessWidget {
                         const Icon(Icons.star, color: Colors.orange, size: 20),
                         const SizedBox(width: 4),
                         Text(
-                          rating,
+                          widget.rating,
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -86,7 +115,7 @@ class CourseDetailScreen extends StatelessWidget {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          '($reviewCount reviews)',
+                          '(${widget.reviewCount} reviews)',
                           style: const TextStyle(
                             color: Colors.grey,
                             fontSize: 14,
@@ -96,67 +125,52 @@ class CourseDetailScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 24),
                     Text(
-                      '$joinedCount People Joined',
+                      '${widget.joinedCount} People Joined',
                       style: const TextStyle(color: Colors.grey, fontSize: 14),
                     ),
                   ],
                 ),
                 const SizedBox(height: 24),
+
+                // Tabs: Course Content | Reviews | Achievement
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text(
-                      'Course Content',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Text('Discussions', style: TextStyle(color: Colors.grey)),
-                    Text('Activities', style: TextStyle(color: Colors.grey)),
+                  children: [
+                    _buildTabItem('Course Content', 0),
+                    _buildTabItem('Reviews', 1),
+                    _buildTabItem('Achievement', 2),
                   ],
                 ),
-                const SizedBox(height: 4),
-                Container(
-                  height: 3,
-                  width: 108,
-                  margin: const EdgeInsets.only(left: 8),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1665D8),
-                    borderRadius: BorderRadius.circular(1.5),
+                const SizedBox(height: 8),
+                // underline indicator
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    height: 3,
+                    width: _selectedIndex == 0
+                        ? 120
+                        : _selectedIndex == 1
+                        ? 60
+                        : 90,
+                    margin: const EdgeInsets.only(left: 8),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1665D8),
+                      borderRadius: BorderRadius.circular(1.5),
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-          // Course content list
+
+          // Content area
           Expanded(
-            child: ListView(
+            child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              children: [
-                _buildContentItem(
-                  number: 1,
-                  title: 'What is SEO?',
-                  duration: '24min',
-                ),
-                _buildContentItem(
-                  number: 2,
-                  title: 'How SEO Works?',
-                  duration: '24min',
-                ),
-                _buildContentItem(
-                  number: 3,
-                  title: 'Why learing SEO?',
-                  duration: '24min',
-                ),
-                _buildContentItem(
-                  number: 4,
-                  title: 'SEO FUNDAMENTAL 1',
-                  duration: '24min',
-                ),
-              ],
+              child: _buildContentArea(),
             ),
           ),
+
           // Bottom purchase section
           Container(
             padding: const EdgeInsets.all(16),
@@ -200,9 +214,9 @@ class CourseDetailScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text(
-                      'PURCHASE (\$5.6)',
-                      style: TextStyle(
+                    child: Text(
+                      'PURCHASE (\$${widget.duration})',
+                      style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                       ),
@@ -215,6 +229,100 @@ class CourseDetailScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildTabItem(String title, int index) {
+    final bool selected = _selectedIndex == index;
+    return Expanded(
+      child: InkWell(
+        onTap: () => setState(() => _selectedIndex = index),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          alignment: Alignment.center,
+          child: Text(
+            title,
+            style: TextStyle(
+              color: selected ? Colors.black : Colors.grey,
+              fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContentArea() {
+    if (_selectedIndex == 0) {
+      // Course content
+      return ListView(
+        children: [
+          _buildContentItem(
+            number: 1,
+            title: 'What is SEO?',
+            duration: '24min',
+          ),
+          _buildContentItem(
+            number: 2,
+            title: 'How SEO Works?',
+            duration: '24min',
+          ),
+          _buildContentItem(
+            number: 3,
+            title: 'Why learning SEO?',
+            duration: '24min',
+          ),
+          _buildContentItem(
+            number: 4,
+            title: 'SEO FUNDAMENTAL 1',
+            duration: '24min',
+          ),
+        ],
+      );
+    } else if (_selectedIndex == 1) {
+      // Reviews
+      return ListView.separated(
+        itemCount: _reviews.length,
+        separatorBuilder: (_, __) => const Divider(),
+        itemBuilder: (context, index) {
+          final r = _reviews[index];
+          return ListTile(
+            leading: CircleAvatar(backgroundImage: NetworkImage(r['avatar']!)),
+            title: Row(
+              children: [
+                Text(
+                  r['username']!,
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(width: 8),
+                Icon(Icons.star, color: Colors.orange, size: 14),
+                const SizedBox(width: 4),
+                Text(r['rating']!),
+              ],
+            ),
+            subtitle: Text(r['content']!),
+          );
+        },
+      );
+    } else {
+      // Achievement
+      return ListView.builder(
+        itemCount: _achievements.length,
+        itemBuilder: (context, index) {
+          final a = _achievements[index];
+          return Card(
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            child: ListTile(
+              leading: Icon(
+                a['icon'] == 'star' ? Icons.star : Icons.school,
+                color: Colors.amber,
+              ),
+              title: Text(a['title']!),
+              subtitle: const Text('Achievement unlocked'),
+            ),
+          );
+        },
+      );
+    }
   }
 
   Widget _buildContentItem({

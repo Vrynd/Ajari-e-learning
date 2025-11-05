@@ -1,247 +1,133 @@
 import 'package:flutter/material.dart';
+import 'my_profile_screen.dart';
+import 'elements_screen.dart';
+import 'color_skins_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            // Profile Header
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Profile Image
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.network(
-                    'https://i.pravatar.cc/100?img=8',
-                    width: 80,
-                    height: 80,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                // Name and Role
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
-                        'Roberto Karlos',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        'Designer',
-                        style: TextStyle(fontSize: 16, color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            // Bio Section
-            const Text(
-              'Bio',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore',
-              style: TextStyle(color: Colors.grey, height: 1.5),
-            ),
-            const SizedBox(height: 24),
-            // Credit Card
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withAlpha(10),
-                    blurRadius: 10,
-                    spreadRadius: 1,
-                  ),
-                ],
+  Widget _menuButton(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    VoidCallback? onTap,
+  }) {
+    const Color bg = Color(0xFF1665D8);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: GestureDetector(
+        onTap: onTap ?? () {},
+        child: Container(
+          height: 56,
+          decoration: BoxDecoration(
+            color: bg,
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.08),
+                blurRadius: 6,
+                offset: const Offset(0, 2),
               ),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Your Credit',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Container(
-                        width: 32,
-                        height: 32,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF1665D8),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: const Icon(
-                          Icons.add,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
-                            '\$568.34',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ],
-                      ),
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFFF9800),
-                          minimumSize: const Size(100, 36),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        child: const Text(
-                          'Top Up',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+            ],
+          ),
+          child: Row(
+            children: [
+              const SizedBox(width: 18),
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Icon(icon, color: Colors.white, size: 18),
               ),
-            ),
-            const SizedBox(height: 24),
-            // On Progress Courses
-            const Text(
-              'On Progress Courses',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-            ),
-            const SizedBox(height: 16),
-            // Course Progress Items
-            _buildProgressCourse(
-              image: 'https://picsum.photos/seed/marketing/120',
-              category: 'MARKETING',
-              title: 'Search Engine Optimization Basic',
-              progress: 0.7,
-            ),
-            const SizedBox(height: 16),
-            _buildProgressCourse(
-              image: 'https://picsum.photos/seed/design/120',
-              category: 'DESIGN',
-              title: 'UI Design Master Class 2023',
-              progress: 0.4,
-            ),
-          ],
+              const SizedBox(width: 18),
+              Text(
+                label.toUpperCase(),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildProgressCourse({
-    required String image,
-    required String category,
-    required String title,
-    required double progress,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(10),
-            blurRadius: 10,
-            spreadRadius: 1,
-          ),
-        ],
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        centerTitle: false,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.of(context).maybePop(),
+        ),
+        title: const Text(
+          'Edit Profile',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+        ),
       ),
-      child: Row(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Image.network(
-              image,
-              width: 80,
-              height: 80,
-              fit: BoxFit.cover,
-            ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _menuButton(
+                context,
+                icon: Icons.person_outline,
+                label: 'My Profile',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const MyProfileScreen()),
+                  );
+                },
+              ),
+              _menuButton(
+                context,
+                icon: Icons.grid_view,
+                label: 'Elements',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const ElementsScreen()),
+                  );
+                },
+              ),
+              _menuButton(
+                context,
+                icon: Icons.palette,
+                label: 'Color Skins',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const ColorSkinsScreen()),
+                  );
+                },
+              ),
+              _menuButton(
+                context,
+                icon: Icons.logout,
+                label: 'Logout',
+                onTap: () {
+                  // simple logout placeholder
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                },
+              ),
+            ],
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  category,
-                  style: const TextStyle(
-                    color: Color(0xFF1665D8),
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  title,
-                  style: const TextStyle(fontWeight: FontWeight.w600),
-                ),
-                const SizedBox(height: 8),
-                // Progress Bar
-                Stack(
-                  children: [
-                    Container(
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE6EDF7),
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                    FractionallySizedBox(
-                      widthFactor: progress,
-                      child: Container(
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF1665D8),
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
+
+  // (Profile progress widgets removed — Profile screen now shows Edit Profile menu items)
 }
