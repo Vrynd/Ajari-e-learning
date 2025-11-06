@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'my_profile_screen.dart';
 import 'elements_screen.dart';
 import 'color_skins_screen.dart';
+import 'login_screen_new.dart';
+import '../services/local_db.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -117,9 +119,42 @@ class ProfileScreen extends StatelessWidget {
                 context,
                 icon: Icons.logout,
                 label: 'Logout',
-                onTap: () {
-                  // simple logout placeholder
-                  Navigator.of(context).popUntil((route) => route.isFirst);
+                onTap: () async {
+                  // Show confirmation dialog
+                  final confirm =
+                      await showDialog<bool>(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('Konfirmasi Logout'),
+                          content: const Text(
+                            'Apakah Anda yakin ingin keluar?',
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(false),
+                              child: const Text('Batal'),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(true),
+                              child: const Text('Logout'),
+                            ),
+                          ],
+                        ),
+                      ) ??
+                      false;
+
+                  if (confirm && context.mounted) {
+                    // Clear user session
+                    await LocalDB().logout();
+
+                    // Navigate to login screen and clear navigation stack
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (context) => const LoginScreen(),
+                      ),
+                      (route) => false, // remove all previous routes
+                    );
+                  }
                 },
               ),
             ],

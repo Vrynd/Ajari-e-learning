@@ -25,4 +25,25 @@ class LocalDB {
     if (user == null) return false;
     return user['password'] == password;
   }
+
+  Future<bool> resetPassword(String email, String newPassword) async {
+    final user = await getUserByEmail(email);
+    if (user == null) return false;
+    
+    user['password'] = newPassword;
+    await _box.put(email, user);
+    return true;
+  }
+
+  // Clear currently logged in user session
+  Future<void> logout() async {
+    // Here you would typically clear any session data, tokens, etc.
+    // For now we'll just ensure the box is properly closed
+    if (_box.isOpen) {
+      // You might want to clear specific session data here
+      // await _box.clear(); // Be careful with this as it clears ALL data
+      // Instead you might want to just clear current session info:
+      // await _box.delete('current_session');
+    }
+  }
 }

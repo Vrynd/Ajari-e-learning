@@ -215,10 +215,11 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                       ),
                     ),
                     child: Text(
-                      'PURCHASE (\$${widget.duration})',
+                      'PURCHASE (${widget.duration})',
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
+                        color: Colors.white,
                       ),
                     ),
                   ),
